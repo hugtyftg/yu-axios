@@ -1,6 +1,7 @@
 import type { AxiosInstance, AxiosRequestConfig } from './types';
 import { Axios } from './core/Axios';
 
+// 工厂模式
 function createInstance(config: AxiosRequestConfig): AxiosInstance {
   const context = new Axios(config);
 

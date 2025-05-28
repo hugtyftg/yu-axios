@@ -1,4 +1,11 @@
 import { isObject } from './is';
+const { toString } = Object.prototype;
+
+// 利用IIFE创建一个没有任何原型链继承的对象，用来缓存每个类型的字符串表示
+export const kindOf = ((cache: any) => (thing: unknown) => {
+  const str = toString.call(thing);
+  return cache[str] || (cache[str] = str.slice(8, -1).toLowerCase());
+})(Object.create(null));
 
 // 将多个plain object或者原始值合并成一个plain object，不考虑array的合并
 export function deepMerge(...params: any) {
@@ -27,3 +34,7 @@ export function deepMerge(...params: any) {
 
   return result;
 }
+
+const { getPrototypeOf } = Object;
+
+export { getPrototypeOf, isObject };

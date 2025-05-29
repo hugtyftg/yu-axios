@@ -13,3 +13,5 @@ export const isObject = <T = any>(thing: T): thing is T =>
 
 export const isArray = <T = any>(thing: T[]): thing is T[] =>
   Array.isArray(thing);
+
+export const isNil = (thing: any) => thing === null || thing === undefined;

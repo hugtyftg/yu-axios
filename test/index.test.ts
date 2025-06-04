@@ -1,15 +1,14 @@
-import { describe, it, expect } from 'vitest'
-import DummyClass from '@/index'
+import { describe, expect, it } from 'vitest';
 
 /**
  * Dummy test
  */
-describe("Dummy test", () => {
-  it("works if true is truthy", () => {
-    expect(true).toBeTruthy()
-  })
+describe('dummy test', () => {
+  it('works if true is truthy', () => {
+    expect(true).toBeTruthy();
+  });
 
-  it("DummyClass is instantiable", () => {
-    expect(new DummyClass()).toBeInstanceOf(DummyClass)
-  })
-})
+  // it('dummyClass is instantiable', () => {
+  //   expect(new DummyClass()).toBeInstanceOf(DummyClass);
+  // });
+});

@@ -1,4 +1,4 @@
-import { isObject } from './is';
+import { isPlainObject } from './is';
 
 const { toString } = Object.prototype;
 
@@ -13,10 +13,10 @@ export function deepMerge(...params: any): any {
   const result = Object.create(null);
 
   const assignValue = (value: any, key: string): any => {
-    if (isObject(result[key]) && isObject(value)) {
+    if (isPlainObject(result[key]) && isPlainObject(value)) {
       // 二者都为对象时，递归合并
       result[key] = deepMerge(result[key], value);
-    } else if (isObject(value)) {
+    } else if (isPlainObject(value)) {
       // value是对象，result[key]不是对象，为了保证value的原型链 继承干净，需要重新创建一个对象
       result[key] = deepMerge({}, value);
     } else {
@@ -38,4 +38,4 @@ export function deepMerge(...params: any): any {
 
 const { getPrototypeOf } = Object;
 
-export { getPrototypeOf, isObject };
+export { getPrototypeOf, isPlainObject };

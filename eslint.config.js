@@ -37,18 +37,29 @@ const rules = {
   'style/linebreak-style': [2, 'unix'],
   // 允许无限禁用规则，设置为 0 表示关闭此规则
   'eslint-comments/no-unlimited-disable': 0,
+  // 文件末尾添加换行符
+  'style/eol-last': ['error', 'always'],
   // 圈复杂度最大为 15
-  complexity: [2, { max: 15 }],
+  'complexity': [2, { max: 15 }],
   // 要求使用 === 而不是 ==
-  eqeqeq: [2, 'always'],
+  'eqeqeq': [2, 'always'],
   // 要求使用驼峰命名法
-  camelcase: 2,
+  'camelcase': 2,
 };
 
-const forbiddenRuleKeys = ['style/brace-style'];
+const forbiddenRuleKeys = [
+  'style/brace-style',
+  'style/quote-props',
+  'ts/consistent-type-imports',
+  'style/member-delimiter-style',
+  'valid-typeof',
+  'style/arrow-parens',
+  'antfu/if-newline',
+  'no-undefined',
+];
 
 const forbiddenRulesObj = forbiddenRuleKeys.reduce((acc, key) => {
-  acc[key] = false;
+  acc[key] = 'off';
   return acc;
 }, {});
 
@@ -56,13 +67,7 @@ export default linter({
   // 项目类型为 lib，即库项目，而不是应用项目
   type: 'lib',
   // 忽略格式检查的文件
-  ignores: [
-    '**/dist/**',
-    '**/node_modules/**',
-    '**/coverage/**',
-    '**/.vitepress/cache/**',
-    '*.md',
-  ],
+  ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**', '**/.vitepress/cache/**', '*.md'],
   // 关闭 vue 相关的规则
   vue: false,
   // 规则配置

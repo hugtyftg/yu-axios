@@ -1,4 +1,5 @@
 import { isObject } from './is';
+
 const { toString } = Object.prototype;
 
 // 利用IIFE创建一个没有任何原型链继承的对象，用来缓存每个类型的字符串表示
@@ -8,10 +9,10 @@ export const kindOf = ((cache: any) => (thing: unknown) => {
 })(Object.create(null));
 
 // 将多个plain object或者原始值合并成一个plain object，不考虑array的合并
-export function deepMerge(...params: any) {
-  let result = Object.create(null);
+export function deepMerge(...params: any): any {
+  const result = Object.create(null);
 
-  const assignValue = (value: any, key: string) => {
+  const assignValue = (value: any, key: string): any => {
     if (isObject(result[key]) && isObject(value)) {
       // 二者都为对象时，递归合并
       result[key] = deepMerge(result[key], value);

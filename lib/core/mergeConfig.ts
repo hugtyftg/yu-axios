@@ -45,14 +45,14 @@ const strategyMap: Map<string, StrategyFn> = new Map([
 // 将两个config对象合并
 function mergeConfig(
   config1: AxiosRequestConfig,
-  config2?: AxiosRequestConfig
+  config2?: AxiosRequestConfig,
 ): AxiosRequestConfig {
   if (!config2) {
     config2 = {};
   }
   const result = Object.create(null);
   // 将两个对象的某个key值合并
-  function mergeField(key: string) {
+  function mergeField(key: string): any {
     const strat = strategyMap.get(key) ?? defaultStrategy;
     result[key] = strat(config1[key], (config2 as AxiosRequestConfig)[key]);
   }

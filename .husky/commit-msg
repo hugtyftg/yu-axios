@@ -1,0 +1,4 @@
+# 设置type=module，Node.js 会默认将所有 .js 文件视为 ES 模块（ESM）
+# 如果迫不得已必修要写commonjs格式的js配置，使用 `.cjs` 扩展名，这样即使项目是 ESM，Node.js 也会将其作为 CommonJS 模块处理。
+
+npx --no -- commitlint --edit "$1" --config commitlint.config.cjs

@@ -1,9 +1,7 @@
-import { type AxiosRequestConfig, type AxiosResponse } from '@/types';
+import type { AxiosRequestConfig, AxiosResponse } from '@/types';
 import { createError, ErrorCodes } from './AxiosError';
 
-export function dispatchRequest(
-  config: AxiosRequestConfig
-): Promise<AxiosResponse> {
+export function dispatchRequest(config: AxiosRequestConfig): Promise<AxiosResponse> {
   return xhr(config);
 }
 
@@ -45,8 +43,8 @@ function xhr(config: AxiosRequestConfig): Promise<AxiosResponse> {
           ErrorCodes.ERR_NETWORK.value,
           config,
           request,
-          request.response
-        )
+          request.response,
+        ),
       );
     };
 
@@ -57,7 +55,7 @@ function xhr(config: AxiosRequestConfig): Promise<AxiosResponse> {
 function settle(
   resolve: (value: any) => void,
   reject: (value: any) => void,
-  response: AxiosResponse
+  response: AxiosResponse,
 ): void {
   const validateStatus = response.config.validateStatus;
   if (!validateStatus || validateStatus(response.status)) {
@@ -73,8 +71,8 @@ function settle(
         ],
         response.config,
         response.request,
-        response
-      )
+        response,
+      ),
     );
   }
 }

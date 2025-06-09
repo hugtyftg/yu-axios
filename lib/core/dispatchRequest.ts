@@ -16,8 +16,18 @@ function processConfig(config: AxiosRequestConfig) {
 
 function xhr(config: AxiosRequestConfig): Promise<AxiosResponse> {
   return new Promise((resolve, reject) => {
-    const { method = 'GET', url, data, headers = {} } = config;
+    const { method = 'GET', url, data, headers = {}, timeout, responseType } = config;
     const request = new XMLHttpRequest();
+
+    // timeout属性设置超时时间，如果在给定时间内请求没有成功执行，请求就会被取消，并且触发 timeout 事件。
+    if (timeout) {
+      request.timeout = timeout;
+    }
+
+    // responseType 属性设置响应格式
+    if (responseType) {
+      request.responseType = responseType;
+    }
 
     request.open(method.toUpperCase(), url!, true);
     request.onreadystatechange = function () {
@@ -56,7 +66,17 @@ function xhr(config: AxiosRequestConfig): Promise<AxiosResponse> {
         ),
       );
     };
-
+    request.ontimeout = function () {
+      reject(
+        createError(
+          `Timeout of ${config.timeout} ms exceeded`,
+          ErrorCodes.ERR_NETWORK.value,
+          config,
+          request,
+          request.response,
+        ),
+      );
+    };
     request.send(data ?? {});
   });
 }

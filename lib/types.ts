@@ -20,11 +20,13 @@ export interface AxiosRequestConfig {
   method: Method;
   // 不一定需要，因为可能某个请求的目的是baseURL
   url?: string;
+  baseURL?: string;
   data?: any;
   params?: Params;
   headers?: IHeader | null | undefined;
+  timeout?: number;
+  responseType?: XMLHttpRequestResponseType;
   validateStatus?: (status: number) => boolean;
-  baseURL?: string;
   paramsSerializer?: (params: Params) => string;
 }
 

@@ -1,4 +1,5 @@
 import type { AxiosRequestConfig, AxiosResponse } from '@/types';
+import { flattenHeaders } from '@/helpers/headers';
 import { transformUrl } from '@/helpers/url';
 import { createError, ErrorCodes } from './AxiosError';
 
@@ -10,6 +11,7 @@ export function dispatchRequest(config: AxiosRequestConfig): Promise<AxiosRespon
 // 对url、headers、data预处理
 function processConfig(config: AxiosRequestConfig) {
   config.url = transformUrl(config);
+  config.headers = flattenHeaders(config, config.method);
 }
 
 function xhr(config: AxiosRequestConfig): Promise<AxiosResponse> {

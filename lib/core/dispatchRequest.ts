@@ -1,8 +1,15 @@
 import type { AxiosRequestConfig, AxiosResponse } from '@/types';
+import { transformUrl } from '@/helpers/url';
 import { createError, ErrorCodes } from './AxiosError';
 
 export function dispatchRequest(config: AxiosRequestConfig): Promise<AxiosResponse> {
+  processConfig(config);
   return xhr(config);
+}
+
+// 对url、headers、data预处理
+function processConfig(config: AxiosRequestConfig) {
+  config.url = transformUrl(config);
 }
 
 function xhr(config: AxiosRequestConfig): Promise<AxiosResponse> {

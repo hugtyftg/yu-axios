@@ -17,12 +17,12 @@ export type IHeader = Record<string, any>;
 export type Params = Record<string, any>;
 
 export interface AxiosRequestConfig {
-  method?: Method;
+  method: Method;
   // 不一定需要，因为可能某个请求的目的是baseURL
   url?: string;
   data?: any;
   params?: Params;
-  headers?: IHeader;
+  headers?: IHeader | null | undefined;
   validateStatus?: (status: number) => boolean;
   baseURL?: string;
   paramsSerializer?: (params: Params) => string;
@@ -32,7 +32,7 @@ export interface AxiosResponse<T = any> {
   data: T;
   status: number;
   statusText: string;
-  headers: IHeader;
+  headers?: IHeader | null | undefined;
   config: AxiosRequestConfig;
   request: XMLHttpRequest;
 }

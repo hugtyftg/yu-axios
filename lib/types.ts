@@ -24,6 +24,8 @@ export interface AxiosRequestConfig {
   params?: Params;
   headers?: IHeader;
   validateStatus?: (status: number) => boolean;
+  baseURL?: string;
+  paramsSerializer?: (params: Params) => string;
 }
 
 export interface AxiosResponse<T = any> {

@@ -56,6 +56,11 @@ const forbiddenRuleKeys = [
   'style/arrow-parens',
   'antfu/if-newline',
   'no-undefined',
+  'unused-imports/no-unused-vars',
+  'ts/explicit-function-return-type',
+  'style/operator-linebreak',
+  'regexp/no-unused-capturing-group',
+  'regexp/no-useless-escape',
 ];
 
 const forbiddenRulesObj = forbiddenRuleKeys.reduce((acc, key) => {

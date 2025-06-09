@@ -28,13 +28,18 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "commit": "git-cz",
+    "commit": "git cz",
     "prepub": "npm run test:prod && npm run build",
     "pub": "sh release.sh"
   },
   "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-customizable"
+    "config": {
+      "commitizen": {
+        "path": "node_modules/cz-customizable"
+      },
+      "cz-customizable": {
+        "config": "./.cz-config.cjs"
+      }
     }
   },
   "devDependencies": {
@@ -45,6 +50,8 @@
     "@types/node": "^18.17.0",
     "@vitest/coverage-v8": "^1.6.0",
     "commitizen": "4.2.4",
+    "commitlint-config-cz": "^0.13.3",
+    "cz-conventional-changelog": "^3.3.0",
     "cz-customizable": "6.3.0",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",

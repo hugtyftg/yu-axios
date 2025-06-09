@@ -19,6 +19,7 @@ export function isArray<T = any>(thing: T[]): thing is T[] {
 }
 
 export function isNil(thing: any): boolean {
+  // 等价于thing == null
   return thing === null || thing === undefined;
 }
 
@@ -31,12 +32,27 @@ export function isPlainObject<T = any>(thing: T): thing is T {
   const prototype = getPrototypeOf(thing);
   return (
     // 情况1：通过 Object.create(null) 创建的无原型对象
-    prototype === null
+    prototype === null ||
     // 情况2：普通对象字面量 {} 或 new Object()
-    || prototype === Object.prototype
+    prototype === Object.prototype ||
     // 情况3：特殊无原型对象，需同时满足两个条件：toStringTag没被改写、不可迭代
-    || (getPrototypeOf(prototype) === null
-      && !(Symbol.toStringTag in (thing as object))
-      && !(Symbol.iterator in (thing as object)))
+    (getPrototypeOf(prototype) === null &&
+      !(Symbol.toStringTag in (thing as object)) &&
+      !(Symbol.iterator in (thing as object)))
   );
+}
+
+export function isDate(thing: any): thing is Date {
+  return Object.prototype.toString.call(thing) === '[object Date]';
+}
+
+export function isURLSearchParams(thing: any): thing is URLSearchParams {
+  return (
+    Object.prototype.toString.call(thing) === '[object URLSearchParams]' ||
+    thing instanceof URLSearchParams
+  );
+}
+
+export function isAbsoluteURL(url: string): boolean {
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 }

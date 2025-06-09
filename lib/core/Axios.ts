@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig, AxiosResponse, IAxios } from '@/types';
+import type { AxiosPromise, AxiosRequestConfig, IAxios } from '@/types';
 import { dispatchRequest } from './dispatchRequest';
 import mergeConfig from './mergeConfig';
 
@@ -8,7 +8,7 @@ export class Axios implements IAxios {
     this.defaults = initConfig;
   }
 
-  request(config: AxiosRequestConfig = {}): Promise<AxiosResponse> {
+  request(config: AxiosRequestConfig): AxiosPromise {
     // return dispatchRequest({
     //   ...this.defaults,
     //   ...config,

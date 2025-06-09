@@ -14,7 +14,7 @@ export function isObject<T = any>(thing: T): thing is T {
   return thing !== null && typeof thing === 'object';
 }
 
-export function isArray<T = any>(thing: T[]): thing is T[] {
+export function isArray<T = any>(thing: T): thing is T {
   return Array.isArray(thing);
 }
 

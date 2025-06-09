@@ -1,5 +1,5 @@
-import { deepMerge, isObject } from '@/helpers';
-import { isNil } from '@/helpers/is';
+import { deepMerge } from '@/helpers';
+import { isNil, isObject } from '@/helpers/is';
 import { AxiosRequestConfig } from '@/types';
 
 /**
@@ -48,7 +48,7 @@ function mergeConfig(
   config2?: AxiosRequestConfig,
 ): AxiosRequestConfig {
   if (!config2) {
-    config2 = {};
+    config2 = {} as AxiosRequestConfig;
   }
   const result = Object.create(null);
   // 将两个对象的某个key值合并
@@ -62,7 +62,7 @@ function mergeConfig(
   }
   // 处理config2没有、config1有的key
   for (const key in config1) {
-    if (!(key in config2)) {
+    if (!(key in config2!)) {
       mergeField(key);
     }
   }

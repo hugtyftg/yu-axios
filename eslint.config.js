@@ -61,6 +61,7 @@ const forbiddenRuleKeys = [
   'style/operator-linebreak',
   'regexp/no-unused-capturing-group',
   'regexp/no-useless-escape',
+  'no-cond-assign',
 ];
 
 const forbiddenRulesObj = forbiddenRuleKeys.reduce((acc, key) => {

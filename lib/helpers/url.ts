@@ -16,31 +16,35 @@ function combineURL(baseURL: string, relativeURL: string): string {
 }
 
 function buildURL(url: string, params?: any, paramsSerializer?: (params: any) => string): string {
-  if (isNil(params)) {
-    return url;
-  }
+  if (isNil(params)) return url; // 无参数直接返回
+
   let serializedParams: string;
   if (paramsSerializer) {
-    serializedParams = paramsSerializer(params);
+    serializedParams = paramsSerializer(params); // 自定义序列化函数
   } else if (isURLSearchParams(params)) {
-    serializedParams = params.toString();
+    serializedParams = params.toString(); // 原生 URLSearchParams 对象
   } else {
     const parts: string[] = [];
     Object.keys(params).forEach(key => {
       const val = params[key];
-      if (isNil(val)) return;
+      if (isNil(val)) return; // 跳过空值
+
+      // 数组处理：key[]=value1&key[]=value2
       if (isArray(val)) {
-        // key[]= 中的方括号是约定俗成的数组标识符，用于告知后端该参数应被解析为数组
-        // 例如参数 { foo: [1, 2] } 会被转换为 foo[]=1&foo[]=2
         val.forEach(v => {
           parts.push(`${encodeURIComponent(key)}[]=${encodeURIComponent(formatURLParam(v))}`);
         });
-      } else {
+      }
+      // 基础类型：key=value
+      else {
         parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(formatURLParam(val))}`);
       }
     });
+    serializedParams = parts.join('&'); // 合并为查询字符串
   }
-  return '';
+
+  // 将查询字符串拼接到 URL
+  return url + (url.includes('?') ? '&' : '?') + serializedParams;
 }
 
 // 将参数中的日期类型和plain对象类型转换为字符串类型

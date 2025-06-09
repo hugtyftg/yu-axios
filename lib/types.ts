@@ -15,16 +15,21 @@ export type Method =
   | 'PATCH';
 export type IHeader = Record<string, any>;
 export type Params = Record<string, any>;
-
+export type CustomAdapter = (config: AxiosRequestConfig) => AxiosPromise;
+export type BuiltInAdapter = 'xhr' | 'fetch' | 'http';
+export type Adapter = BuiltInAdapter | CustomAdapter;
 export interface AxiosRequestConfig {
   method: Method;
   // 不一定需要，因为可能某个请求的目的是baseURL
   url?: string;
+  baseURL?: string;
   data?: any;
   params?: Params;
   headers?: IHeader | null | undefined;
+  timeout?: number;
+  adapter?: Adapter;
+  responseType?: XMLHttpRequestResponseType;
   validateStatus?: (status: number) => boolean;
-  baseURL?: string;
   paramsSerializer?: (params: Params) => string;
 }
 

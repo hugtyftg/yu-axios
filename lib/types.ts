@@ -117,3 +117,11 @@ export interface AxiosInterceptorManager<T> {
 }
 export type AxiosInterceptorResolvedFn<T> = (val: T) => T | Promise<T>;
 export type AxiosInterceptorRejectedFn = (err: any) => any;
+
+// 执行链，多个请求拦截器--> 请求 --> 响应 --> 多个响应拦截器
+export interface PromiseChainNode<T> {
+  // 可能是resolve函数，也可能是dispatchRequest
+  resolved: AxiosInterceptorResolvedFn<T> | ((config: AxiosRequestConfig) => AxiosPromise);
+  rejected?: AxiosInterceptorRejectedFn;
+}
+export type PromiseChain<T> = PromiseChainNode<T>[];

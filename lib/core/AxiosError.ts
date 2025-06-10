@@ -13,8 +13,8 @@ export class AxiosError extends Error implements IAxiosError {
     message: string,
     public code: AxiosErrorCode,
     public config?: AxiosRequestConfig | null,
-    public request?: XMLHttpRequest,
-    public response?: AxiosResponse,
+    public request?: XMLHttpRequest | null,
+    public response?: AxiosResponse | null,
   ) {
     super(message);
     this.isAxiosError = true;
@@ -60,8 +60,8 @@ function createError(
   message: string,
   code: AxiosErrorCode,
   config: AxiosRequestConfig | null,
-  request?: XMLHttpRequest,
-  response?: AxiosResponse,
+  request?: XMLHttpRequest | null,
+  response?: AxiosResponse | null,
 ): AxiosError {
   const error = new AxiosError(message, code, config, request, response);
   return error;

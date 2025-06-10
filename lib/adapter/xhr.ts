@@ -1,6 +1,6 @@
 import { createError, ErrorCodes } from '@/core/AxiosError';
 import settle from '@/core/settle';
-import { AxiosRequestConfig, AxiosResponse } from '@/types';
+import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '@/types';
 
 const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
 

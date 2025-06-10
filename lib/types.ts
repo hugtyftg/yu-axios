@@ -25,7 +25,7 @@ export interface AxiosRequestConfig {
   baseURL?: string;
   data?: any;
   params?: Params;
-  headers?: IHeader | null | undefined;
+  headers?: IHeader | null;
   timeout?: number;
   adapter?: Adapter;
   responseType?: XMLHttpRequestResponseType;
@@ -37,9 +37,9 @@ export interface AxiosResponse<T = any> {
   data: T;
   status: number;
   statusText: string;
-  headers?: IHeader | null | undefined;
+  headers?: IHeader | null;
   config: AxiosRequestConfig;
-  request: XMLHttpRequest;
+  request: XMLHttpRequest | null;
 }
 
 export const ERROR_CODES = {
@@ -62,8 +62,8 @@ export interface IAxiosError extends Error {
   isAxiosError: boolean;
   config?: AxiosRequestConfig | null;
   code?: AxiosErrorCode | null;
-  request?: XMLHttpRequest;
-  response?: AxiosResponse;
+  request?: XMLHttpRequest | null;
+  response?: AxiosResponse | null;
 }
 
 // Axios请求返回的Promise的约束

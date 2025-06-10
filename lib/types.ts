@@ -19,11 +19,11 @@ export type CustomAdapter = (config: AxiosRequestConfig) => AxiosPromise;
 export type BuiltInAdapter = 'xhr' | 'fetch' | 'http';
 export type Adapter = BuiltInAdapter | CustomAdapter;
 export interface AxiosRequestConfig {
-  method: Method;
+  method?: Method;
   // 不一定需要，因为可能某个请求的目的是baseURL
   url?: string;
   baseURL?: string;
-  data?: any;
+  data?: unknown;
   params?: Params;
   headers?: IHeader | null;
   timeout?: number;
@@ -69,9 +69,41 @@ export interface IAxiosError extends Error {
 // Axios请求返回的Promise的约束
 export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {}
 
-export interface IAxios {
+export interface Axios {
   defaults: AxiosRequestConfig;
-  request: <T = any>(config: AxiosRequestConfig) => AxiosPromise<T>;
+  getUri: (config: AxiosRequestConfig) => string;
+  request: <T = any>(
+    url: string | AxiosRequestConfig,
+    config: AxiosRequestConfig,
+  ) => AxiosPromise<T>;
+}
+// 最外层暴露的作为静态实例使用的axios
+export interface AxiosInstance extends Axios {
+  <T = any>(config: AxiosRequestConfig): AxiosPromise<T>;
+  <T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>;
+
+  // 无需data
+  get: <T = any>(url: string, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  delete: <T = any>(url: string, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  head: <T = any>(url: string, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  options: <T = any>(url: string, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  // 需要data
+  post: <T = any>(url: string, data?: unknown, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  put: <T = any>(url: string, data?: unknown, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  patch: <T = any>(url: string, data?: unknown, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  // 需要data且请求头Content-Type为multipart/form-data
+  postForm: <T = any>(url: string, data?: unknown, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  putForm: <T = any>(url: string, data?: unknown, config?: AxiosRequestConfig) => AxiosPromise<T>;
+  patchForm: <T = any>(url: string, data?: unknown, config?: AxiosRequestConfig) => AxiosPromise<T>;
 }
 
-export interface AxiosInstance extends IAxios {}
+export interface AxiosStatic extends AxiosInstance {
+  create: (config?: AxiosRequestConfig) => AxiosInstance;
+  all: <T = any>(promises: Array<Promise<T> | T>) => Promise<T[]>;
+  spread: <T, R>(callback: (...args: T[]) => R) => (arr: T[]) => R;
+  Axios: AxiosClassStatic;
+}
+
+export interface AxiosClassStatic {
+  new (config: AxiosRequestConfig): Axios;
+}

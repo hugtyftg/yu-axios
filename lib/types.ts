@@ -71,6 +71,10 @@ export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {}
 
 export interface Axios {
   defaults: AxiosRequestConfig;
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>;
+    response: AxiosInterceptorManager<AxiosResponse>;
+  };
   getUri: (config: AxiosRequestConfig) => string;
   request: <T = any>(
     url: string | AxiosRequestConfig,
@@ -107,3 +111,9 @@ export interface AxiosStatic extends AxiosInstance {
 export interface AxiosClassStatic {
   new (config: AxiosRequestConfig): Axios;
 }
+export interface AxiosInterceptorManager<T> {
+  use: (resolved: AxiosInterceptorResolvedFn<T>, rejected?: AxiosInterceptorRejectedFn) => number;
+  eject: (id: number) => void;
+}
+export type AxiosInterceptorResolvedFn<T> = (val: T) => T | Promise<T>;
+export type AxiosInterceptorRejectedFn = (err: any) => any;

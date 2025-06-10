@@ -1,12 +1,29 @@
-import type { AxiosPromise, AxiosRequestConfig, Axios as IAxios, Method } from '@/types';
+import type {
+  AxiosInterceptorManager,
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Axios as IAxios,
+  Method,
+} from '@/types';
 import { transformUrl } from '@/helpers/url';
 import { dispatchRequest } from './dispatchRequest';
+import InterceptorManager from './InterceptorManager';
 import mergeConfig from './mergeConfig';
 
 export class Axios implements IAxios {
   defaults: AxiosRequestConfig;
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>;
+    response: AxiosInterceptorManager<AxiosResponse>;
+  };
+
   constructor(initConfig: AxiosRequestConfig) {
     this.defaults = initConfig;
+    this.interceptors = {
+      request: new InterceptorManager<AxiosRequestConfig>(),
+      response: new InterceptorManager<AxiosResponse>(),
+    };
     // 绑定不穿Data的方法，如get
     this._eachMethodNoData();
     // 绑定传入Data的方法，如post

@@ -1,22 +1,23 @@
 import type {
-  AxiosInterceptorManager,
   AxiosPromise,
   AxiosRequestConfig,
   AxiosResponse,
   Axios as IAxios,
   Method,
+  PromiseChain,
 } from '@/types';
 import { transformUrl } from '@/helpers/url';
 import { dispatchRequest } from './dispatchRequest';
 import InterceptorManager from './InterceptorManager';
 import mergeConfig from './mergeConfig';
 
+interface Interceptors {
+  request: InterceptorManager<AxiosRequestConfig>;
+  response: InterceptorManager<AxiosResponse>;
+}
 export class Axios implements IAxios {
   defaults: AxiosRequestConfig;
-  interceptors: {
-    request: AxiosInterceptorManager<AxiosRequestConfig>;
-    response: AxiosInterceptorManager<AxiosResponse>;
-  };
+  interceptors: Interceptors;
 
   constructor(initConfig: AxiosRequestConfig) {
     this.defaults = initConfig;
@@ -31,17 +32,31 @@ export class Axios implements IAxios {
   }
 
   request(url: string | AxiosRequestConfig, config: AxiosRequestConfig = {}): AxiosPromise {
-    // return dispatchRequest({
-    //   ...this.defaults,
-    //   ...config,
-    // });
     if (typeof url === 'string') {
       config.url = url;
     } else {
       config = url;
     }
     config = mergeConfig(this.defaults, config);
-    return dispatchRequest(config);
+
+    const promiseChain: PromiseChain<any> = [
+      {
+        resolved: dispatchRequest,
+        rejected: undefined,
+      },
+    ];
+    // 遍历request、response拦截器数组中的方法，添加到promiseChain中
+    this.interceptors.request.forEach(interceptor => promiseChain.unshift(interceptor));
+    this.interceptors.response.forEach(interceptor => promiseChain.push(interceptor));
+
+    let promise = Promise.resolve(config) as AxiosPromise<AxiosRequestConfig>;
+
+    while (promiseChain.length) {
+      const { resolved, rejected } = promiseChain.shift()!;
+      promise = promise.then(resolved, rejected);
+    }
+
+    return promise;
   }
 
   getUri(config: AxiosRequestConfig): string {

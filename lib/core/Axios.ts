@@ -1,4 +1,4 @@
-import type { AxiosPromise, AxiosRequestConfig, IAxios, Method } from '@/types';
+import type { AxiosPromise, AxiosRequestConfig, Axios as IAxios, Method } from '@/types';
 import { transformUrl } from '@/helpers/url';
 import { dispatchRequest } from './dispatchRequest';
 import mergeConfig from './mergeConfig';
@@ -13,11 +13,16 @@ export class Axios implements IAxios {
     this._eachMethodWithData();
   }
 
-  request(config: AxiosRequestConfig): AxiosPromise {
+  request(url: string | AxiosRequestConfig, config: AxiosRequestConfig = {}): AxiosPromise {
     // return dispatchRequest({
     //   ...this.defaults,
     //   ...config,
     // });
+    if (typeof url === 'string') {
+      config.url = url;
+    } else {
+      config = url;
+    }
     config = mergeConfig(this.defaults, config);
     return dispatchRequest(config);
   }

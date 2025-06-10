@@ -8,6 +8,25 @@ export const kindOf = ((cache: any) => (thing: unknown) => {
   return cache[str] || (cache[str] = str.slice(8, -1).toLowerCase());
 })(Object.create(null));
 
+// 将fn的this绑定到thisArg上
+function _bind(fn: Function, thisArg: unknown) {
+  return function (...args: any) {
+    return fn.apply(thisArg, args);
+  };
+}
+
+// 将from的属性拷贝到to上
+export function extend<T, U>(to: T, from: U, thisArg?: unknown): T & U {
+  for (const key in from) {
+    if (thisArg && typeof from[key] === 'function') {
+      (to as any)[key] = _bind(from[key], thisArg);
+    } else {
+      (to as any)[key] = from[key];
+    }
+  }
+  return to as T & U;
+}
+
 // 将多个plain object或者原始值合并成一个plain object，不考虑array的合并
 export function deepMerge(...params: any): any {
   const result = Object.create(null);

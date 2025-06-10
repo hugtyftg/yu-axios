@@ -71,6 +71,10 @@ export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {}
 
 export interface Axios {
   defaults: AxiosRequestConfig;
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>;
+    response: AxiosInterceptorManager<AxiosResponse>;
+  };
   getUri: (config: AxiosRequestConfig) => string;
   request: <T = any>(
     url: string | AxiosRequestConfig,
@@ -107,3 +111,19 @@ export interface AxiosStatic extends AxiosInstance {
 export interface AxiosClassStatic {
   new (config: AxiosRequestConfig): Axios;
 }
+
+export interface AxiosInterceptorManager<T> {
+  use: (resolved: ResolvedFn<T>, rejected?: RejectedFn) => number;
+  eject: (id: number) => void;
+}
+
+export type ResolvedFn<T> = (val: T) => T | Promise<T>;
+export type RejectedFn = (err: any) => any;
+
+// 执行链，多个请求拦截器--> 请求 --> 响应 --> 多个响应拦截器
+export interface PromiseChainNode<T> {
+  // 可能是resolve函数，也可能是dispatchRequest
+  resolved: ResolvedFn<T> | ((config: AxiosRequestConfig | AxiosResponse) => AxiosPromise);
+  rejected?: RejectedFn;
+}
+export type PromiseChain<T> = PromiseChainNode<T>[];

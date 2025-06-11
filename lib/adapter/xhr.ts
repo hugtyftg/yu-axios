@@ -7,7 +7,15 @@ const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
 export default isXHRAdapterSupported &&
   function xhrAdapter(config: AxiosRequestConfig): AxiosPromise {
     return new Promise((resolve, reject) => {
-      const { method = 'GET', url, data, headers = {}, timeout, responseType } = config;
+      const {
+        method = 'GET',
+        url,
+        data,
+        headers = {},
+        timeout,
+        responseType,
+        cancelToken,
+      } = config;
       const request = new XMLHttpRequest();
 
       // timeout属性设置超时时间，如果在给定时间内请求没有成功执行，请求就会被取消，并且触发 timeout 事件。
@@ -68,6 +76,15 @@ export default isXHRAdapterSupported &&
           ),
         );
       };
-      request.send(data ?? {});
+
+      // 监听cancelToken.promise是否被resolve，也就是外部是否要求取消请求
+      if (cancelToken) {
+        cancelToken.promise.then(reason => {
+          request.abort(); // xhr.abort
+          reject(reason);
+        });
+      }
+
+      request.send(data as any);
     });
   };

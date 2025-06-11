@@ -29,6 +29,7 @@ export interface AxiosRequestConfig {
   timeout?: number;
   adapter?: Adapter;
   responseType?: XMLHttpRequestResponseType;
+  cancelToken?: CancelToken;
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
 }
@@ -106,6 +107,7 @@ export interface AxiosStatic extends AxiosInstance {
   all: <T = any>(promises: Array<Promise<T> | T>) => Promise<T[]>;
   spread: <T, R>(callback: (...args: T[]) => R) => (arr: T[]) => R;
   Axios: AxiosClassStatic;
+  CancelToken: CancelTokenStatic;
 }
 
 export interface AxiosClassStatic {
@@ -130,6 +132,8 @@ export type PromiseChain<T> = PromiseChainNode<T>[];
 export interface CancelToken {
   promise: Promise<string>;
   reason?: string;
+  throwIfRequested: () => void;
+  source: () => CancelTokenSource;
 }
 
 export interface Canceler {

@@ -15,9 +15,7 @@ export default class CancelToken implements ICancelToken {
       promiseResolver = resolve as PromiseResolver;
     });
     const canceler: Canceler = (message?: string) => {
-      if (this.reason) {
-        return;
-      }
+      this.throwIfRequested();
       this.reason = message;
       promiseResolver(message);
     };
@@ -34,5 +32,12 @@ export default class CancelToken implements ICancelToken {
       token: cancelToken,
       cancel: canceler,
     };
+  }
+
+  // reason代表已经取消了
+  throwIfRequested() {
+    if (this.reason) {
+      throw new Error(this.reason);
+    }
   }
 }

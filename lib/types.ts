@@ -112,18 +112,39 @@ export interface AxiosClassStatic {
   new (config: AxiosRequestConfig): Axios;
 }
 
+/* 实现拦截器：执行链，多个请求拦截器--> 请求 --> 响应 --> 多个响应拦截器 */
 export interface AxiosInterceptorManager<T> {
   use: (resolved: ResolvedFn<T>, rejected?: RejectedFn) => number;
   eject: (id: number) => void;
 }
-
 export type ResolvedFn<T> = (val: T) => T | Promise<T>;
 export type RejectedFn = (err: any) => any;
-
-// 执行链，多个请求拦截器--> 请求 --> 响应 --> 多个响应拦截器
 export interface PromiseChainNode<T> {
   // 可能是resolve函数，也可能是dispatchRequest
   resolved: ResolvedFn<T> | ((config: AxiosRequestConfig | AxiosResponse) => AxiosPromise);
   rejected?: RejectedFn;
 }
 export type PromiseChain<T> = PromiseChainNode<T>[];
+
+/* 取消请求 */
+export interface CancelToken {
+  promise: Promise<string>;
+  reason?: string;
+}
+
+export interface Canceler {
+  (message?: string): void;
+}
+
+export interface CancelExecutor {
+  (cancel: Canceler): void;
+}
+
+export interface CancelTokenSource {
+  token: CancelToken;
+  cancel: Canceler;
+}
+export interface CancelTokenStatic {
+  new (executor: CancelExecutor): CancelToken;
+  source: () => CancelTokenSource;
+}

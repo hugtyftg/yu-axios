@@ -1,6 +1,6 @@
 import { createError, ErrorCodes } from '@/core/AxiosError';
 import settle from '@/core/settle';
-import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '@/types';
+import { AxiosPromise, AxiosRequestConfig, AxiosResponse, CancelError } from '@/types';
 
 const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
 
@@ -15,6 +15,7 @@ export default isXHRAdapterSupported &&
         timeout,
         responseType,
         cancelToken,
+        signal,
       } = config;
       const request = new XMLHttpRequest();
 
@@ -28,13 +29,14 @@ export default isXHRAdapterSupported &&
         request.responseType = responseType;
       }
 
-      const onCancel = reason => {
+      const onCancel = (reason?: CancelError) => {
         request.abort();
         reject(reason);
       };
       // 监听cancelToken.promise是否被resolve，也就是外部是否要求取消请求
-      if (cancelToken) {
-        cancelToken.subscribe(onCancel);
+      if (cancelToken || signal) {
+        if (cancelToken) cancelToken.subscribe(onCancel);
+        if (signal) signal.aborted ? onCancel() : signal.addEventListener('abort', onCancel);
       }
 
       request.open(method.toUpperCase(), url!, true);

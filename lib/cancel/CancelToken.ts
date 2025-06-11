@@ -1,23 +1,25 @@
-import { AxiosRequestConfig, Canceler, CancelExecutor, CancelToken as ICancelToken } from '@/types';
+import {
+  AxiosRequestConfig,
+  Canceler,
+  CancelExecutor,
+  CancelTokenPromiseResolver,
+  CancelToken as ICancelToken,
+} from '@/types';
 import CancelError from './CancelError';
-
-interface PromiseResolver {
-  (reason?: CancelError): void;
-}
 
 export default class CancelToken implements ICancelToken {
   // 未取消时状态为pending，取消后状态为fulfilled
   promise: Promise<CancelError>;
   reason?: CancelError;
-  _listeners?: PromiseResolver[];
+  _listeners?: CancelTokenPromiseResolver[];
 
   constructor(executor: CancelExecutor) {
     /* promise监听+发布订阅实现取消请求 */
     // 1.创建promise并暴露resolve方法
     // 技巧，在promise外使用resolve或reject改变promise状态
-    let promiseResolver: PromiseResolver;
+    let CancelTokenPromiseResolver: CancelTokenPromiseResolver;
     this.promise = new Promise(resolve => {
-      promiseResolver = resolve as PromiseResolver;
+      CancelTokenPromiseResolver = resolve as CancelTokenPromiseResolver;
     });
     // 2.监听promise状态，结合发布订阅模式
     this.promise.then(cancelError => {
@@ -33,7 +35,7 @@ export default class CancelToken implements ICancelToken {
     ) => {
       this.throwIfRequested();
       this.reason = new CancelError(message, config, request);
-      promiseResolver(this.reason);
+      CancelTokenPromiseResolver(this.reason);
     };
     // 4.将取消请求的函数canceler通过executor暴露到CancelToken外面
     executor(canceler);
@@ -56,7 +58,7 @@ export default class CancelToken implements ICancelToken {
     if (this.reason) throw this.reason;
   }
 
-  subscribe(listener: PromiseResolver) {
+  subscribe(listener: CancelTokenPromiseResolver) {
     // 如果已经取消，直接执行listener，不再放入订阅队列内
     if (this.reason) {
       listener(this.reason);
@@ -68,7 +70,7 @@ export default class CancelToken implements ICancelToken {
     }
   }
 
-  unsubscribe(listener: PromiseResolver) {
+  unsubscribe(listener: CancelTokenPromiseResolver) {
     if (!this._listeners) return;
     const index = this._listeners.indexOf(listener);
     if (index !== -1) this._listeners.splice(index, 1);

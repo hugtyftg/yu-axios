@@ -30,8 +30,15 @@ export interface AxiosRequestConfig {
   adapter?: Adapter;
   responseType?: XMLHttpRequestResponseType;
   cancelToken?: CancelToken;
+  signal?: GenericSignal;
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
+}
+
+export interface GenericSignal {
+  readonly aborted: boolean;
+  addEventListener: (type: 'abort', listener: () => void) => void;
+  removeEventListener: (type: 'abort', listener: () => void) => void;
 }
 
 export interface AxiosResponse<T = any> {
@@ -131,13 +138,17 @@ export interface PromiseChainNode<T> {
 export type PromiseChain<T> = PromiseChainNode<T>[];
 
 /* 取消请求 */
+export interface CancelTokenPromiseResolver {
+  (reason: CancelError): void;
+}
+
 export interface CancelToken {
   promise: Promise<CancelError>;
   reason?: CancelError;
   throwIfRequested: () => void;
   source: () => CancelTokenSource;
-  subscribe: (listener: (reason?: CancelError) => void) => void;
-  unsubscribe: (listener: (reason?: CancelError) => void) => void;
+  subscribe: (listener: CancelTokenPromiseResolver) => void;
+  unsubscribe: (listener: CancelTokenPromiseResolver) => void;
 }
 
 export interface Canceler {

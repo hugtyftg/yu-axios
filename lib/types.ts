@@ -130,14 +130,14 @@ export type PromiseChain<T> = PromiseChainNode<T>[];
 
 /* 取消请求 */
 export interface CancelToken {
-  promise: Promise<string>;
-  reason?: string;
+  promise: Promise<CancelError>;
+  reason?: CancelError;
   throwIfRequested: () => void;
   source: () => CancelTokenSource;
 }
 
 export interface Canceler {
-  (message?: string): void;
+  (message: string, config: AxiosRequestConfig, request: XMLHttpRequest): void;
 }
 
 export interface CancelExecutor {
@@ -151,4 +151,12 @@ export interface CancelTokenSource {
 export interface CancelTokenStatic {
   new (executor: CancelExecutor): CancelToken;
   source: () => CancelTokenSource;
+}
+
+export interface CancelError {
+  message?: string;
+}
+
+export interface CancelErrorStatic {
+  new (message: string, config: AxiosRequestConfig, request: XMLHttpRequest): CancelError;
 }

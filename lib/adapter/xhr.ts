@@ -28,6 +28,15 @@ export default isXHRAdapterSupported &&
         request.responseType = responseType;
       }
 
+      const onCancel = reason => {
+        request.abort();
+        reject(reason);
+      };
+      // 监听cancelToken.promise是否被resolve，也就是外部是否要求取消请求
+      if (cancelToken) {
+        cancelToken.subscribe(onCancel);
+      }
+
       request.open(method.toUpperCase(), url!, true);
       request.onreadystatechange = function () {
         // xhr.readyState 所有状态
@@ -50,7 +59,22 @@ export default isXHRAdapterSupported &&
           request,
         };
         // response实际处理逻辑
-        settle(resolve, reject, response);
+        // 接收到response之后，无论成功还是失败，都要取消订阅的onCancel函数
+        const unsubscribeAfterResponse = () => {
+          if (cancelToken) cancelToken.unsubscribe(onCancel);
+        };
+        // 因为resolve和reject都是接受一个参数的函数，所以这里用箭头函数
+        settle(
+          (val: any) => {
+            resolve(val);
+            unsubscribeAfterResponse();
+          },
+          (err: any) => {
+            reject(err);
+            unsubscribeAfterResponse();
+          },
+          response,
+        );
       };
 
       request.onerror = function () {
@@ -76,15 +100,6 @@ export default isXHRAdapterSupported &&
           ),
         );
       };
-
-      // 监听cancelToken.promise是否被resolve，也就是外部是否要求取消请求
-      if (cancelToken) {
-        const onCancel = reason => {
-          request.abort();
-          reject(reason);
-        };
-        cancelToken.promise.then(onCancel);
-      }
 
       request.send(data as any);
     });

@@ -136,6 +136,8 @@ export interface CancelToken {
   reason?: CancelError;
   throwIfRequested: () => void;
   source: () => CancelTokenSource;
+  subscribe: (listener: (reason?: CancelError) => void) => void;
+  unsubscribe: (listener: (reason?: CancelError) => void) => void;
 }
 
 export interface Canceler {

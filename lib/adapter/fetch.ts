@@ -13,7 +13,7 @@ export default isFetchAdapter &&
       const options: RequestInit = {
         method: method.toUpperCase(),
         headers: new Headers(headers as IHeader),
-        body: data,
+        body: data as any,
       };
 
       // 超时

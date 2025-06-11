@@ -30,8 +30,15 @@ export interface AxiosRequestConfig {
   adapter?: Adapter;
   responseType?: XMLHttpRequestResponseType;
   cancelToken?: CancelToken;
+  signal?: GenericSignal;
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
+}
+
+export interface GenericSignal {
+  readonly aborted: boolean;
+  addEventListener: (type: 'abort', listener: () => void) => void;
+  removeEventListener: (type: 'abort', listener: () => void) => void;
 }
 
 export interface AxiosResponse<T = any> {
@@ -106,8 +113,10 @@ export interface AxiosStatic extends AxiosInstance {
   create: (config?: AxiosRequestConfig) => AxiosInstance;
   all: <T = any>(promises: Array<Promise<T> | T>) => Promise<T[]>;
   spread: <T, R>(callback: (...args: T[]) => R) => (arr: T[]) => R;
+  isCancel: (thing: unknown) => thing is CancelError;
   Axios: AxiosClassStatic;
   CancelToken: CancelTokenStatic;
+  CancelError: CancelErrorStatic;
 }
 
 export interface AxiosClassStatic {
@@ -129,11 +138,17 @@ export interface PromiseChainNode<T> {
 export type PromiseChain<T> = PromiseChainNode<T>[];
 
 /* 取消请求 */
+export interface CancelTokenPromiseResolver {
+  (reason: CancelError): void;
+}
+
 export interface CancelToken {
   promise: Promise<CancelError>;
   reason?: CancelError;
   throwIfRequested: () => void;
   source: () => CancelTokenSource;
+  subscribe: (listener: CancelTokenPromiseResolver) => void;
+  unsubscribe: (listener: CancelTokenPromiseResolver) => void;
 }
 
 export interface Canceler {
@@ -150,7 +165,6 @@ export interface CancelTokenSource {
 }
 export interface CancelTokenStatic {
   new (executor: CancelExecutor): CancelToken;
-  source: () => CancelTokenSource;
 }
 
 export interface CancelError {

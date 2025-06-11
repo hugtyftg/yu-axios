@@ -1,6 +1,6 @@
 import { createError, ErrorCodes } from '@/core/AxiosError';
 import settle from '@/core/settle';
-import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '@/types';
+import { AxiosPromise, AxiosRequestConfig, AxiosResponse, CancelError } from '@/types';
 
 const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
 
@@ -15,6 +15,7 @@ export default isXHRAdapterSupported &&
         timeout,
         responseType,
         cancelToken,
+        signal,
       } = config;
       const request = new XMLHttpRequest();
 
@@ -26,6 +27,16 @@ export default isXHRAdapterSupported &&
       // responseType 属性设置响应格式
       if (responseType) {
         request.responseType = responseType;
+      }
+
+      const onCancel = (reason?: CancelError) => {
+        request.abort();
+        reject(reason);
+      };
+      // 监听cancelToken.promise是否被resolve，也就是外部是否要求取消请求
+      if (cancelToken || signal) {
+        if (cancelToken) cancelToken.subscribe(onCancel);
+        if (signal) signal.aborted ? onCancel() : signal.addEventListener('abort', onCancel);
       }
 
       request.open(method.toUpperCase(), url!, true);
@@ -50,7 +61,22 @@ export default isXHRAdapterSupported &&
           request,
         };
         // response实际处理逻辑
-        settle(resolve, reject, response);
+        // 接收到response之后，无论成功还是失败，都要取消订阅的onCancel函数
+        const unsubscribeAfterResponse = () => {
+          if (cancelToken) cancelToken.unsubscribe(onCancel);
+        };
+        // 因为resolve和reject都是接受一个参数的函数，所以这里用箭头函数
+        settle(
+          (val: any) => {
+            resolve(val);
+            unsubscribeAfterResponse();
+          },
+          (err: any) => {
+            reject(err);
+            unsubscribeAfterResponse();
+          },
+          response,
+        );
       };
 
       request.onerror = function () {
@@ -76,15 +102,6 @@ export default isXHRAdapterSupported &&
           ),
         );
       };
-
-      // 监听cancelToken.promise是否被resolve，也就是外部是否要求取消请求
-      if (cancelToken) {
-        const onCancel = reason => {
-          request.abort();
-          reject(reason);
-        };
-        cancelToken.promise.then(onCancel);
-      }
 
       request.send(data as any);
     });

@@ -106,8 +106,10 @@ export interface AxiosStatic extends AxiosInstance {
   create: (config?: AxiosRequestConfig) => AxiosInstance;
   all: <T = any>(promises: Array<Promise<T> | T>) => Promise<T[]>;
   spread: <T, R>(callback: (...args: T[]) => R) => (arr: T[]) => R;
+  isCancel: (thing: unknown) => thing is CancelError;
   Axios: AxiosClassStatic;
   CancelToken: CancelTokenStatic;
+  CancelError: CancelErrorStatic;
 }
 
 export interface AxiosClassStatic {
@@ -150,7 +152,6 @@ export interface CancelTokenSource {
 }
 export interface CancelTokenStatic {
   new (executor: CancelExecutor): CancelToken;
-  source: () => CancelTokenSource;
 }
 
 export interface CancelError {

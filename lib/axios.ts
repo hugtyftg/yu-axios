@@ -1,4 +1,5 @@
-import type { AxiosInstance, AxiosRequestConfig, AxiosStatic } from './types';
+import type { AxiosInstance, AxiosRequestConfig, AxiosStatic, CancelTokenStatic } from './types';
+import CancelToken from './cancel/CancelToken';
 import { Axios } from './core/Axios';
 import { defaultConfig as defaults } from './core/defaults';
 import mergeConfig from './core/mergeConfig';
@@ -61,5 +62,7 @@ axios.all([promise1, promise2]).then(
 ); */
 
 axios.Axios = Axios;
+
+axios.CancelToken = CancelToken as CancelTokenStatic;
 
 export default axios;

@@ -152,3 +152,11 @@ export interface CancelTokenStatic {
   new (executor: CancelExecutor): CancelToken;
   source: () => CancelTokenSource;
 }
+
+export interface CancelError {
+  message?: string;
+}
+
+export interface CancelErrorStatic {
+  new (message: string, config: AxiosRequestConfig, request: XMLHttpRequest): CancelError;
+}

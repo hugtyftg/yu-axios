@@ -79,10 +79,11 @@ export default isXHRAdapterSupported &&
 
       // 监听cancelToken.promise是否被resolve，也就是外部是否要求取消请求
       if (cancelToken) {
-        cancelToken.promise.then(reason => {
-          request.abort(); // xhr.abort
+        const onCancel = reason => {
+          request.abort();
           reject(reason);
-        });
+        };
+        cancelToken.promise.then(onCancel);
       }
 
       request.send(data as any);

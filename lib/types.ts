@@ -33,6 +33,7 @@ export interface AxiosRequestConfig {
   signal?: GenericSignal;
   transformRequest?: AxiosTransformer | AxiosTransformer[];
   transformResponse?: AxiosTransformer | AxiosTransformer[];
+  withCredentials?: boolean;
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
 }

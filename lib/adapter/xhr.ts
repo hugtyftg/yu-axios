@@ -2,6 +2,7 @@ import { createError, ErrorCodes } from '@/core/AxiosError';
 import settle from '@/core/settle';
 import { parseRawResponseHeaders } from '@/helpers/headers';
 import { isFormData } from '@/helpers/is';
+import { isSameOrigin } from '@/helpers/url';
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse, CancelError } from '@/types';
 
 const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
@@ -18,6 +19,7 @@ export default isXHRAdapterSupported &&
         responseType,
         cancelToken,
         signal,
+        withCredentials,
       } = config;
       const request = new XMLHttpRequest();
       // ---------------- add event start ----------------
@@ -105,6 +107,9 @@ export default isXHRAdapterSupported &&
       if (responseType) {
         request.responseType = responseType;
       }
+      if (withCredentials) {
+        request.withCredentials = withCredentials;
+      }
       // ---------------- config request end ----------------
 
       // ---------------- config cancel start ----------------
@@ -127,6 +132,9 @@ export default isXHRAdapterSupported &&
             request.setRequestHeader(key, headers[key]);
           }
         });
+      }
+      if (withCredentials && !isSameOrigin(url!)) {
+        // TODO:xsrf防护
       }
       // ---------------- set header start ----------------
 

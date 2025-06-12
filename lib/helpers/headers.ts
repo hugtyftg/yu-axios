@@ -43,3 +43,47 @@ export function normalizeHeaderName(headers: IHeader | null | void, normalizedNa
     }
   });
 }
+
+const ignoreDuplicateOf = new Set([
+  'age',
+  'authorization',
+  'content-length',
+  'content-type',
+  'etag',
+  'expires',
+  'from',
+  'host',
+  'if-modified-since',
+  'if-unmodified-since',
+  'last-modified',
+  'location',
+  'max-forwards',
+  'proxy-authorization',
+  'referer',
+  'retry-after',
+  'user-agent',
+]);
+
+// 将request.getAllResponseHeaders()返回的headers字符串解析成对象
+export function parseRawResponseHeaders(rawHeaders: string): IHeader {
+  const result = Object.create(null);
+  if (!rawHeaders) {
+    return result;
+  }
+  rawHeaders.split('\n').forEach(line => {
+    let [key, ...values] = line.split(':');
+    key = key.trim().toLowerCase();
+    if (!key || ignoreDuplicateOf.has(key)) {
+      return;
+    }
+    const value = values.join(':').trim();
+    if (key === 'set-cookie') {
+      // set-cookie的值是cookie数组
+      result[key] = result[key] ? [...result[key], value] : [value];
+    } else {
+      // 某些key有多个取值
+      result[key] = result[key] ? `${result[key]}, ${value}` : value;
+    }
+  });
+  return result;
+}

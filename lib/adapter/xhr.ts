@@ -1,5 +1,6 @@
 import { createError, ErrorCodes } from '@/core/AxiosError';
 import settle from '@/core/settle';
+import { parseRawResponseHeaders } from '@/helpers/headers';
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse, CancelError } from '@/types';
 
 const isXHRAdapterSupported = typeof XMLHttpRequest !== 'undefined';
@@ -52,11 +53,14 @@ export default isXHRAdapterSupported &&
         if (request.readyState !== 4) return;
 
         // 服务器响应后，xhr的status、statusText、response属性都有值了
+        const rawResponseHeaders = request.getAllResponseHeaders();
+        const responseHeaders = parseRawResponseHeaders(rawResponseHeaders);
+
         const response: AxiosResponse = {
           status: request.status, // HTTP 状态码（一个数字）：200，404，403 等，如果出现非 HTTP 错误，则为 0。
           statusText: request.statusText, // HTTP 状态消息（一个字符串）：状态码为 200 对应于 OK，404 对应于 Not Found，403 对应于 Forbidden。
           data: request.response, // 服务器 response body。
-          headers,
+          headers: responseHeaders,
           config,
           request,
         };

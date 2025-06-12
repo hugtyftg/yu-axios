@@ -1,7 +1,7 @@
 import type { AxiosRequestConfig } from '@/types';
 import { isPlainObject } from '@/helpers';
-import { isString } from '@/helpers/is';
 import { processRequestHeaders } from '@/helpers/headers';
+import { isString } from '@/helpers/is';
 
 export const defaults: AxiosRequestConfig = {
   method: 'GET',

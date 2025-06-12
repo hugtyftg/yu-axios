@@ -2,13 +2,13 @@ import type { Adapter, AxiosPromise, AxiosRequestConfig } from '@/types';
 import adapters from '@/adapter';
 import { flattenHeaders } from '@/helpers/headers';
 import { transformUrl } from '@/helpers/url';
-import { defaultConfig } from './defaults';
+import { defaults } from './defaults';
 
 export function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
   // 发送前检查是否已经被取消
   config.cancelToken?.throwIfRequested();
   processConfig(config);
-  const adapter = adapters.getAdapter(config?.adapter || (defaultConfig.adapter as Adapter));
+  const adapter = adapters.getAdapter(config?.adapter || (defaults.adapter as Adapter));
   return adapter(config);
 }
 

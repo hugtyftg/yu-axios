@@ -3,7 +3,7 @@ import CancelError from './cancel/CancelError';
 import CancelToken from './cancel/CancelToken';
 import isCancel from './cancel/isCancel';
 import { Axios } from './core/Axios';
-import { defaultConfig as defaults } from './core/defaults';
+import { defaults } from './core/defaults';
 import mergeConfig from './core/mergeConfig';
 import { extend } from './helpers';
 // 工厂模式

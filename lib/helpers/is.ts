@@ -56,3 +56,7 @@ export function isURLSearchParams(thing: any): thing is URLSearchParams {
 export function isAbsoluteURL(url: string): boolean {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 }
+
+export function isFormData(thing: unknown): thing is FormData {
+  return typeof FormData !== 'undefined' && thing instanceof FormData;
+}

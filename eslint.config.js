@@ -63,6 +63,7 @@ const forbiddenRuleKeys = [
   'regexp/no-useless-escape',
   'no-cond-assign',
   'ts/no-unsafe-function-type',
+  'complexity',
 ];
 
 const forbiddenRulesObj = forbiddenRuleKeys.reduce((acc, key) => {

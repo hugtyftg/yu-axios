@@ -56,3 +56,16 @@ function formatURLParam(param: any): string {
   }
   return param;
 }
+
+// 判断请求URL是否跨域
+const currentOrigin = window.location.origin;
+const newNode = document.createElement('a');
+export function isSameOrigin(url: string): boolean {
+  const newOrigin = resolveURL(url);
+  return newOrigin === currentOrigin;
+}
+function resolveURL(url: string) {
+  newNode.href = url;
+  const { origin } = newNode;
+  return origin;
+}

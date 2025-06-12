@@ -64,6 +64,7 @@ export default isXHRAdapterSupported &&
         // 接收到response之后，无论成功还是失败，都要取消订阅的onCancel函数
         const unsubscribeAfterResponse = () => {
           if (cancelToken) cancelToken.unsubscribe(onCancel);
+          if (signal) signal.removeEventListener('abort', onCancel);
         };
         // 因为resolve和reject都是接受一个参数的函数，所以这里用箭头函数
         settle(

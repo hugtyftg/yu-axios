@@ -31,8 +31,14 @@ export interface AxiosRequestConfig {
   responseType?: XMLHttpRequestResponseType;
   cancelToken?: CancelToken;
   signal?: GenericSignal;
+  transformRequest?: AxiosTransformer | AxiosTransformer[];
+  transformResponse?: AxiosTransformer | AxiosTransformer[];
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
+}
+
+export interface AxiosTransformer {
+  (this: AxiosRequestConfig, data: unknown, headers: IHeader | null | void, status?: number): any;
 }
 
 export interface GenericSignal {

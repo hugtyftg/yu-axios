@@ -29,6 +29,7 @@
     "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    // 生成.d.ts文件
     "declaration": true,
     "declarationDir": "dist/types",
     "noEmit": true,

@@ -36,6 +36,7 @@ export interface AxiosRequestConfig {
   withCredentials?: boolean;
   xsrfCookieName?: string;
   xsrfHeaderName?: string;
+  auth: AxiosBasicAuth;
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
 }
@@ -182,4 +183,9 @@ export interface CancelError {
 
 export interface CancelErrorStatic {
   new (message: string, config: AxiosRequestConfig, request: XMLHttpRequest): CancelError;
+}
+
+export interface AxiosBasicAuth {
+  username: string;
+  password: string;
 }

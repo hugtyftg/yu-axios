@@ -49,14 +49,14 @@ export class Axios implements IAxios {
     this.interceptors.request.forEach(interceptor => promiseChain.unshift(interceptor));
     this.interceptors.response.forEach(interceptor => promiseChain.push(interceptor));
 
-    let promise = Promise.resolve(config) as AxiosPromise<AxiosRequestConfig>;
+    let promise = Promise.resolve(config);
 
     while (promiseChain.length) {
       const { resolved, rejected } = promiseChain.shift()!;
       promise = promise.then(resolved, rejected);
     }
 
-    return promise;
+    return promise as AxiosPromise;
   }
 
   getUri(config: AxiosRequestConfig): string {

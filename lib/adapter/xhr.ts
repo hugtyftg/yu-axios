@@ -23,6 +23,7 @@ export default isXHRAdapterSupported &&
         withCredentials,
         xsrfHeaderName,
         xsrfCookieName,
+        auth,
       } = config;
       const request = new XMLHttpRequest();
       // ---------------- add event start ----------------
@@ -128,19 +129,21 @@ export default isXHRAdapterSupported &&
         headers && delete headers['Content-Type'];
       }
       if (withCredentials && !isSameOrigin(url!) && xsrfHeaderName) {
-        // TODO:xsrf防护
+        // xsrf防护
         const xsrfValue = cookie.read(xsrfCookieName!);
         xsrfValue && (headers![xsrfHeaderName!] = xsrfValue);
       }
-      if (headers) {
-        Object.keys(headers).forEach(key => {
-          if (!data && key.toLowerCase() === 'content-type') {
-            delete headers[key];
-          } else {
-            request.setRequestHeader(key, headers[key]);
-          }
-        });
+      if (auth) {
+        headers!.Authorization = `Basic ${btoa(`${auth.username}:${auth.password}`)}`;
       }
+      Object.keys(headers!).forEach(key => {
+        if (!data && key.toLowerCase() === 'content-type') {
+          delete headers![key];
+        } else {
+          request.setRequestHeader(key, headers![key]);
+        }
+      });
+
       // ---------------- set header start ----------------
 
       request.send(data as any);

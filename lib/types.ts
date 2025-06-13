@@ -36,7 +36,7 @@ export interface AxiosRequestConfig {
   withCredentials?: boolean;
   xsrfCookieName?: string;
   xsrfHeaderName?: string;
-  auth: AxiosBasicAuth;
+  auth?: AxiosBasicAuth;
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
   onUploadProgress?: (progressEvent: ProgressEvent) => void;

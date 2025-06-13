@@ -39,6 +39,8 @@ export interface AxiosRequestConfig {
   auth: AxiosBasicAuth;
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
+  onUploadProgress?: (progressEvent: ProgressEvent) => void;
+  onDownloadProgress?: (progressEvent: ProgressEvent) => void;
 }
 
 export interface AxiosTransformer {

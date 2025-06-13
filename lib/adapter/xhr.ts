@@ -24,6 +24,8 @@ export default isXHRAdapterSupported &&
         xsrfHeaderName,
         xsrfCookieName,
         auth,
+        onUploadProgress,
+        onDownloadProgress,
       } = config;
       const request = new XMLHttpRequest();
       // ---------------- add event start ----------------
@@ -100,6 +102,12 @@ export default isXHRAdapterSupported &&
           ),
         );
       };
+      if (onUploadProgress) {
+        request.upload.onprogress = onUploadProgress;
+      }
+      if (onDownloadProgress) {
+        request.onprogress = onDownloadProgress;
+      }
       // ---------------- add event end ----------------
 
       // ---------------- config request start ----------------

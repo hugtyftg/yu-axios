@@ -34,6 +34,8 @@ export interface AxiosRequestConfig {
   transformRequest?: AxiosTransformer | AxiosTransformer[];
   transformResponse?: AxiosTransformer | AxiosTransformer[];
   withCredentials?: boolean;
+  xsrfCookieName?: string;
+  xsrfHeaderName?: string;
   validateStatus?: (status: number) => boolean;
   paramsSerializer?: (params: Params) => string;
 }

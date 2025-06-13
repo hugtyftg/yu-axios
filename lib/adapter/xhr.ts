@@ -1,5 +1,6 @@
 import { createError, ErrorCodes } from '@/core/AxiosError';
 import settle from '@/core/settle';
+import cookie from '@/helpers/cookie';
 import { parseRawResponseHeaders } from '@/helpers/headers';
 import { isFormData } from '@/helpers/is';
 import { isSameOrigin } from '@/helpers/url';
@@ -20,6 +21,8 @@ export default isXHRAdapterSupported &&
         cancelToken,
         signal,
         withCredentials,
+        xsrfHeaderName,
+        xsrfCookieName,
       } = config;
       const request = new XMLHttpRequest();
       // ---------------- add event start ----------------
@@ -124,6 +127,11 @@ export default isXHRAdapterSupported &&
       if (isFormData(data)) {
         headers && delete headers['Content-Type'];
       }
+      if (withCredentials && !isSameOrigin(url!) && xsrfHeaderName) {
+        // TODO:xsrf防护
+        const xsrfValue = cookie.read(xsrfCookieName!);
+        xsrfValue && (headers![xsrfHeaderName!] = xsrfValue);
+      }
       if (headers) {
         Object.keys(headers).forEach(key => {
           if (!data && key.toLowerCase() === 'content-type') {
@@ -132,9 +140,6 @@ export default isXHRAdapterSupported &&
             request.setRequestHeader(key, headers[key]);
           }
         });
-      }
-      if (withCredentials && !isSameOrigin(url!)) {
-        // TODO:xsrf防护
       }
       // ---------------- set header start ----------------
 

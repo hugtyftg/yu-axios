@@ -1,13 +1,13 @@
 import { isArray, isFunction, isString } from '@/helpers/is';
 import { Adapter, AxiosPromise, AxiosRequestConfig, BuiltInAdapter, CustomAdapter } from '@/types';
 import fetchAdapter from './fetch';
-import httpAdapter from './http';
+// import httpAdapter from './http';
 import xhrAdapter from './xhr';
 
 const knownAdapters: Record<string, ((config: AxiosRequestConfig) => AxiosPromise) | false> = {
   xhr: xhrAdapter,
   fetch: fetchAdapter,
-  http: httpAdapter,
+  // http: httpAdapter,
 };
 
 export default {

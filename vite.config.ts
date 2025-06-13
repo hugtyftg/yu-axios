@@ -1,7 +1,12 @@
 import path from 'node:path';
 import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig({
+  plugins: [
+    // Vite的Library模式下运行时，能够自动生成类型声明文件(*.d.ts)
+    dts(),
+  ],
   // 配置打包信息
   build: {
     // 库模式 https://cn.vitejs.dev/guide/build#library-mode

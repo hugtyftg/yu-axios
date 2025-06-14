@@ -59,6 +59,7 @@
     "eslint-plugin-prettier": "^5.4.1",
     "husky": "^9.1.7",
     "jsdom": "^22.1.0",
+    "release-it": "^19.0.3",
     "rimraf": "^5.0.1",
     "rollup-plugin-visualizer": "^6.0.3",
     "terser": "^5.42.0",

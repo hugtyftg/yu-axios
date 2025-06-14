@@ -22,6 +22,7 @@
     "lint:check": "eslint",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && vite build",
+    "release": "release-it",
     "test": "vitest --coverage --run",
     "test:watch": "vitest --coverage",
     "test:prod": "npm run lint && vitest --coverage --run",

@@ -6,8 +6,11 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [
-    // Vite的Library模式下运行时，能够自动生成类型声明文件(*.d.ts)
-    dts(),
+    // Vite的Library模式下运行时，能够在outDir下自动生成类型声明文件(*.d.ts)
+    dts({
+      tsconfigPath: path.resolve(__dirname, 'tsconfig.json'),
+      outDir: 'dist/type',
+    }),
     visualizer({ open: true }),
   ],
   // 配置打包信息
@@ -17,9 +20,9 @@ export default defineConfig({
       // 打包入口文件
       entry: './lib/index.ts',
       // UMD模式下本库会作为cdn从script中引入，此时本库暴露给window的全局变量名称
-      name: 'yu-axios',
+      name: 'yu-axios-core',
       // 打包输出的包文件名，默认package.json的name选项
-      fileName: 'yu-axios',
+      fileName: 'yu-axios-core',
       // 默认的 formats 为 ['es'、'umd']，如果使用多个入口，则为 ['es'、'cjs']
       formats: ['es', 'umd'],
     },

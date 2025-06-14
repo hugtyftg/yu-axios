@@ -1,16 +1,16 @@
 {
-  "name": "ts-lib",
+  "name": "yu-axios-core",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "license": "MIT",
   "exports": {
     "types": "./index.d.ts",
-    "import": "./dist/ts-lib.mjs",
-    "require": "./dist/ts-lib.umd.js"
+    "import": "./dist/yu-axios-core.mjs",
+    "require": "./dist/yu-axios-core.umd.js"
   },
-  "main": "./dist/ts-lib.umd.js",
-  "module": "./dist/ts-lib.mjs",
-  "types": "./index.d.ts",
+  "main": "./dist/yu-axios-core.umd.js",
+  "module": "./dist/yu-axios-core.js",
+  "types": "./dist/type/index.d.ts",
   "files": [
     "README.md",
     "dist",

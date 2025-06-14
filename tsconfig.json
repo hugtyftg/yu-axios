@@ -29,6 +29,7 @@
     "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    // 生成.d.ts文件
     "declaration": true,
     "declarationDir": "dist/types",
     "noEmit": true,
@@ -38,6 +39,7 @@
     "isolatedModules": true,
     "skipLibCheck": true
   },
+  // 指定需要编译处理的文件列表（配置了dts后，打包时会生成这些文件的.d.ts类型文件）
   "include": [
     "lib"
   ]

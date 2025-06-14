@@ -64,6 +64,7 @@ const forbiddenRuleKeys = [
   'no-cond-assign',
   'ts/no-unsafe-function-type',
   'complexity',
+  'camelcase',
 ];
 
 const forbiddenRulesObj = forbiddenRuleKeys.reduce((acc, key) => {

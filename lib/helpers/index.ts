@@ -15,7 +15,7 @@ function _bind(fn: Function, thisArg: unknown) {
   };
 }
 
-// 将from的属性拷贝到to上
+// 将from的属性拷贝到to上，并指定from的函数this指向thisArg
 export function extend<T, U>(to: T, from: U, thisArg?: unknown): T & U {
   for (const key in from) {
     if (thisArg && typeof from[key] === 'function') {

@@ -3,9 +3,13 @@
 layout: home
 
 hero:
-  name: "ts-lib-starter"
-  text: "a ts-lib-starter develp with typescript"
+  name: 'YuAxios'
+  text: 'Lightweight HTTP Client for JavaScript'
   tagline: My great project tagline
+  image:
+    # src: /axios.svg
+    src: /logo.png
+    alt: YuAxios
   actions:
     - theme: brand
       text: Markdown Examples
@@ -22,4 +26,3 @@ features:
   - title: Feature C
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
-

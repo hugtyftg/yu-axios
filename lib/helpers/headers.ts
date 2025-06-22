@@ -81,7 +81,7 @@ export function parseRawResponseHeaders(rawHeaders: string): IHeader {
       // set-cookie的值是cookie数组
       result[key] = result[key] ? [...result[key], value] : [value];
     } else {
-      // 某些key有多个取值
+      // 某些key有多个取值，拼接成用逗号分隔的字符串
       result[key] = result[key] ? `${result[key]}, ${value}` : value;
     }
   });

@@ -1,3 +1,4 @@
+import { isFunction } from '@/helpers/is';
 import {
   AxiosErrorCode,
   AxiosRequestConfig,
@@ -21,7 +22,7 @@ export class AxiosError extends Error implements IAxiosError {
 
     // 适配不同环境
     // nodesjs环境下，使用Error.captureStackTrace
-    if (typeof Error.captureStackTrace === 'function') {
+    if (isFunction(Error.captureStackTrace)) {
       Error.captureStackTrace(this, this.constructor);
     } else {
       // 浏览器环境下，使用Error.stack

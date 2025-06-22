@@ -25,7 +25,7 @@ export class Axios implements IAxios {
       request: new InterceptorManager<AxiosRequestConfig>(),
       response: new InterceptorManager<AxiosResponse>(),
     };
-    // 绑定不穿Data的方法，如get
+    // 绑定不传入Data的方法，如get
     this._eachMethodNoData();
     // 绑定传入Data的方法，如post
     this._eachMethodWithData();
@@ -37,20 +37,21 @@ export class Axios implements IAxios {
     } else {
       config = url;
     }
+    // 合并参数
     config = mergeConfig(this.defaults, config);
 
+    // 创建链模型的中间节点，遍历request、response拦截器数组中的方法，分别添加到promiseChain的链头和链尾
     const promiseChain: PromiseChain<any> = [
       {
         resolved: dispatchRequest,
         rejected: undefined,
       },
     ];
-    // 遍历request、response拦截器数组中的方法，添加到promiseChain中
     this.interceptors.request.forEach(interceptor => promiseChain.unshift(interceptor));
     this.interceptors.response.forEach(interceptor => promiseChain.push(interceptor));
 
+    // 创建promiseChain的入口，并依次执行所有任务
     let promise = Promise.resolve(config);
-
     while (promiseChain.length) {
       const { resolved, rejected } = promiseChain.shift()!;
       promise = promise.then(resolved, rejected);

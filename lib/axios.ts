@@ -31,7 +31,7 @@ function createInstance(config: AxiosRequestConfig) {
 // 但这个对象本身并不直接实现请求逻辑，而是将具体工作委托给内部模块（如 Axios 类、拦截器、适配器等）。
 const axios = createInstance(defaults) as AxiosStatic;
 
-/* axios实例上额外挂载的方法 */
+/* 5.混合继承：手动挂载实例方法 */
 axios.create = function create(config) {
   return createInstance(mergeConfig(defaults, config));
 };

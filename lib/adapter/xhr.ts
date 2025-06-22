@@ -151,7 +151,6 @@ export default isXHRAdapterSupported &&
           request.setRequestHeader(key, headers![key]);
         }
       });
-
       // ---------------- set header start ----------------
 
       request.send(data as any);

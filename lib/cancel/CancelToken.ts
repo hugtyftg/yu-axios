@@ -21,7 +21,7 @@ export default class CancelToken implements ICancelToken {
     this.promise = new Promise(resolve => {
       CancelTokenPromiseResolver = resolve as CancelTokenPromiseResolver;
     });
-    // 2.监听promise状态，结合发布订阅模式
+    // 2.监听promise状态，当 `promise` 变为 `fulfilled` 时，会通知所有订阅者（即监听取消事件的回调）。
     this.promise.then(cancelError => {
       if (!this._listeners) return;
       this._listeners.forEach(listener => listener(cancelError));
